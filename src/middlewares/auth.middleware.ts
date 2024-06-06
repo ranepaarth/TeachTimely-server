@@ -2,7 +2,7 @@ import { NextFunction, Request, Response } from "express";
 import jwt, { JwtPayload } from "jsonwebtoken";
 
 export interface CustomRequest extends Request {
-  userId: string | JwtPayload;
+  user: string | JwtPayload;
 }
 
 export const requireAuth = async (
@@ -35,7 +35,7 @@ export const requireAuth = async (
       return res.json(403).json({ message: "Forbidden" });
     }
 
-    (req as CustomRequest).userId = decoded;
+    (req as CustomRequest).user = decoded;
 
     next();
   } catch (error: any) {

@@ -30,7 +30,7 @@ const loginController = asyncHandler(
 
     res.cookie(process.env.ACCESS_TOKEN_NAME!, accessToken, {
       httpOnly: true,
-      secure: false,
+      secure: true,
       sameSite: "none",
       maxAge: 3 * 24 * 60 * 60 * 1000,
     });
@@ -80,8 +80,13 @@ const registerController = asyncHandler(
 
 /* Logout */
 const logoutController = async (req: Request, res: Response) => {
-  res.clearCookie(process.env.ACCESS_TOKEN_NAME!);
+  res.cookie(process.env.ACCESS_TOKEN_NAME!, "", { expires: new Date(0) });
+
   res.status(200).json({ success: true, message: "Logged out successfully!!" });
 };
 
-export { loginController, logoutController, registerController };
+export {
+  loginController,
+  logoutController,
+  registerController,
+};
