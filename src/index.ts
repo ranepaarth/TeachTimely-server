@@ -4,6 +4,7 @@ import dotenv from "dotenv";
 import express, { Express, Request, Response } from "express";
 import { connectDB } from "./config/db.config";
 import { errorHandler, notFoundError } from "./middlewares/error.middleware";
+import { adminRoutes } from "./routes/admin.routes";
 import { authRoutes } from "./routes/auth.routes";
 import { courseRoutes } from "./routes/courses.routes";
 dotenv.config();
@@ -27,6 +28,7 @@ app.use(cookieParser());
 
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/courses", courseRoutes);
+app.use("/api/v1/admin", adminRoutes);
 
 app.get("/", async (req: Request, res: Response) => {
   res.status(200).json({ message: "Server working fine!!" });
