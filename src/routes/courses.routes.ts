@@ -1,15 +1,18 @@
 import express from "express";
 import {
-  createCourse,
+  createCourseController,
   getAllCourses,
   updateCourse,
 } from "../controllers/courses.controller";
 import { requireAuth } from "../middlewares/auth.middleware";
+import { multerMiddleware } from "../middlewares/multer.middleware";
 
 const courseRoutes = express.Router();
 
-courseRoutes.use(requireAuth)
-courseRoutes.route("/create").post(createCourse);
+courseRoutes.use(requireAuth);
+courseRoutes
+  .route("/create")
+  .post(multerMiddleware, createCourseController);
 courseRoutes.route("/update/:courseId").patch(updateCourse);
 courseRoutes.route("/").get(getAllCourses);
 
