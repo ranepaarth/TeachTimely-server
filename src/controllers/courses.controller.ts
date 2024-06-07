@@ -1,10 +1,10 @@
 import { NextFunction, Request, Response } from "express";
 import asyncHandler from "express-async-handler";
+import moment from "moment";
 import { cloudinaryUploadImage } from "../lib/cloudinary";
 import { CourseModel } from "../models/courses.model";
 import { LectureModel } from "../models/lectures.model";
 import { UserModel } from "../models/users.model";
-import moment from "moment";
 
 /* Create a course */
 const createCourseController = asyncHandler(
@@ -51,8 +51,8 @@ const updateCourse = asyncHandler(
     const { date, instructorId } = req.body;
 
     const instructor = await UserModel.findById(instructorId);
-    if(!instructor){
-      throw new Error("Instructor does not exist!")
+    if (!instructor) {
+      throw new Error("Instructor does not exist!");
     }
 
     if (instructor.role === "ADMIN") {
@@ -72,7 +72,11 @@ const updateCourse = asyncHandler(
     });
 
     if (existingLecture) {
-      throw new Error(`Instructor already has a lecture on ${moment(date).format("MMMM Do, YYYY")}`);
+      throw new Error(
+        `Instructor already has a lecture on ${moment(date).format(
+          "MMMM Do, YYYY"
+        )}`
+      );
     }
 
     const newLecture = await LectureModel.create({
@@ -82,9 +86,9 @@ const updateCourse = asyncHandler(
 
     newLecture.save();
 
-    course.lectures.push(newLecture._id);
-    instructor.lectures.push(newLecture)
-    await instructor.save()
+    course.lectures.push(newLecture);
+    instructor.lectures.push(newLecture);
+    await instructor.save();
     await course.save();
 
     res.status(200).json({
@@ -97,11 +101,8 @@ const updateCourse = asyncHandler(
 /* Get courses such that they are referenced to the instructorId */
 const getAllCourses = asyncHandler(
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    const courses = await CourseModel.find({}).sort({ createdAt: -1 }).populate([{
-      path:'lectures',populate:{
-        path:'instructor',select:"name email _id"
-      }
-    }]);
+    const courses = await CourseModel.find({})
+      .sort({ createdAt: -1 })
 
     if (!courses) {
       res.status(400).json({ message: "No Courses yet!" });
