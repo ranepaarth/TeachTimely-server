@@ -10,6 +10,7 @@ interface UserMethods {
 }
 
 export type User = {
+  _id?:string
   name: string;
   email: string;
   password: string;
@@ -39,7 +40,7 @@ const userSchema = new Schema<User, UserModel, UserMethods>(
       enum: roles,
       default: "INSTRUCTOR",
     },
-    lectures:[{type:Schema.Types.ObjectId,ref:"Lecture"}]
+    lectures:[{type:Schema.Types.ObjectId,ref:"Lecture"}],
   },
   { timestamps: true }
 );

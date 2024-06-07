@@ -1,4 +1,14 @@
-import { InferSchemaType, model, Schema } from "mongoose";
+import { model, Schema } from "mongoose";
+import { Lecture } from "./lectures.model";
+
+export interface Course {
+  name:string,
+  level:string,
+  description:string,
+  image:string,
+  lectures:Lecture[]
+} 
+
 
 const courseSchema = new Schema(
   {
@@ -23,7 +33,5 @@ const courseSchema = new Schema(
   },
   { timestamps: true }
 );
-
-type Course = InferSchemaType<typeof courseSchema>;
 
 export const CourseModel = model<Course>("Course", courseSchema);
