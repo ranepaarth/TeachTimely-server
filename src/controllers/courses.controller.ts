@@ -97,7 +97,11 @@ const updateCourse = asyncHandler(
 /* Get courses such that they are referenced to the instructorId */
 const getAllCourses = asyncHandler(
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    const courses = await CourseModel.find({});
+    const courses = await CourseModel.find({}).sort({ createdAt: -1 }).populate([{
+      path:'lectures',populate:{
+        path:'instructor',select:"name email _id"
+      }
+    }]);
 
     if (!courses) {
       res.status(400).json({ message: "No Courses yet!" });
