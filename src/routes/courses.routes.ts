@@ -13,7 +13,7 @@ courseRoutes.use(requireAuth);
 courseRoutes
   .route("/create")
   .post(multerMiddleware, createCourseController);
-courseRoutes.route("/update/:courseId").patch(updateCourse);
+courseRoutes.route("/update/:courseId/lectures").patch(updateCourse);
 courseRoutes.route("/").get(getAllCourses);
 
 export { courseRoutes };

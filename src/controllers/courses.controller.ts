@@ -2,6 +2,9 @@ import { NextFunction, Request, Response } from "express";
 import asyncHandler from "express-async-handler";
 import { cloudinaryUploadImage } from "../lib/cloudinary";
 import { CourseModel } from "../models/courses.model";
+import { LectureModel } from "../models/lectures.model";
+import { UserModel } from "../models/users.model";
+import moment from "moment";
 
 /* Create a course */
 const createCourseController = asyncHandler(
@@ -42,9 +45,54 @@ const createCourseController = asyncHandler(
 );
 
 /* Update course with instructor and lecture date by sending the instructorId as a param or through the request body */
-const updateCourse = async () => {
-  //TODO: After a course is created, update the course by assigning instructors and date of lectures to the course
-};
+const updateCourse = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    const { courseId } = req.params;
+    const { date, instructorId } = req.body;
+
+    const instructor = await UserModel.findById(instructorId);
+    if(!instructor){
+      throw new Error("Instructor does not exist!")
+    }
+
+    if (instructor.role === "ADMIN") {
+      throw new Error("Lectures cannot be assigned to an admin");
+    }
+
+    const course = await CourseModel.findById(courseId);
+
+    if (!course) {
+      throw new Error("Course not found!!");
+    }
+
+    const lectureDate = new Date(date);
+    const existingLecture = await LectureModel.findOne({
+      date: lectureDate,
+      instructor: instructorId,
+    });
+
+    if (existingLecture) {
+      throw new Error(`Instructor already has a lecture on ${moment(date).format("MMMM Do, YYYY")}`);
+    }
+
+    const newLecture = await LectureModel.create({
+      date: lectureDate,
+      instructor: instructorId,
+    });
+
+    newLecture.save();
+
+    course.lectures.push(newLecture._id);
+    instructor.lectures.push(newLecture)
+    await instructor.save()
+    await course.save();
+
+    res.status(200).json({
+      success: true,
+      message: "Lecture has been scheduled successfully!",
+    });
+  }
+);
 
 /* Get courses such that they are referenced to the instructorId */
 const getAllCourses = asyncHandler(
