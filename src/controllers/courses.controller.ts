@@ -47,8 +47,17 @@ const updateCourse = async () => {
 };
 
 /* Get courses such that they are referenced to the instructorId */
-const getAllCourses = async (req: Request, res: Response) => {
-  //TODO:
-};
+const getAllCourses = asyncHandler(
+  async (req: Request, res: Response, next: NextFunction): Promise<void> => {
+    const courses = await CourseModel.find({});
+
+    if (!courses) {
+      res.status(400).json({ message: "No Courses yet!" });
+      return;
+    }
+
+    res.status(200).json(courses);
+  }
+);
 
 export { createCourseController, getAllCourses, updateCourse };
