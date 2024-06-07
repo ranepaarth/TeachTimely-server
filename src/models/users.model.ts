@@ -1,6 +1,6 @@
 import bcrypt from "bcryptjs";
 import jwt from "jsonwebtoken";
-import { InferSchemaType, model, Model, Schema } from "mongoose";
+import { model, Model, Schema } from "mongoose";
 import { Lecture } from "./lectures.model";
 
 const roles = ["ADMIN", "INSTRUCTOR"];
@@ -9,7 +9,7 @@ interface UserMethods {
   generateAccessToken(): string;
 }
 
-type User = {
+export type User = {
   name: string;
   email: string;
   password: string;
