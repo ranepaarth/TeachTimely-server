@@ -8,6 +8,7 @@ import { errorHandler, notFoundError } from "./middlewares/error.middleware";
 import { adminRoutes } from "./routes/admin.routes";
 import { authRoutes } from "./routes/auth.routes";
 import { courseRoutes } from "./routes/courses.routes";
+import { instructorRoutes } from "./routes/instructor.routes";
 
 dotenv.config();
 
@@ -37,6 +38,7 @@ app.use(cookieParser());
 app.use("/api/v1/auth", authRoutes);
 app.use("/api/v1/admin", adminRoutes);
 app.use("/api/v1/courses", courseRoutes);
+app.use("/api/v1/instructor", instructorRoutes);
 
 app.get("/", async (req: Request, res: Response) => {
   res.status(200).json({ message: "Server working fine!!" });
