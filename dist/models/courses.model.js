@@ -23,3 +23,4 @@ const courseSchema = new mongoose_1.Schema({
     lectures: [{ type: mongoose_1.Schema.Types.ObjectId, ref: "Lecture" }],
 }, { timestamps: true });
 exports.CourseModel = (0, mongoose_1.model)("Course", courseSchema);
+//# sourceMappingURL=courses.model.js.map

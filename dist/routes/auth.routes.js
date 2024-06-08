@@ -11,3 +11,4 @@ exports.authRoutes = authRoutes;
 authRoutes.route("/login").post(auth_controller_1.loginController);
 authRoutes.route("/register").post(auth_controller_1.registerController);
 authRoutes.route("/logout").post(auth_controller_1.logoutController);
+//# sourceMappingURL=auth.routes.js.map

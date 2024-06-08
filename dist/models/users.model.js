@@ -73,3 +73,4 @@ userSchema.method("generateAccessToken", function generateAccessToken() {
     });
 });
 exports.UserModel = (0, mongoose_1.model)("User", userSchema);
+//# sourceMappingURL=users.model.js.map

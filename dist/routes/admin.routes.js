@@ -11,3 +11,4 @@ const admin_middleware_1 = require("../middlewares/admin.middleware");
 const adminRoutes = express_1.default.Router();
 exports.adminRoutes = adminRoutes;
 adminRoutes.route("/instructors").get(auth_middleware_1.requireAuth, admin_middleware_1.adminMiddleware, users_controller_1.getAllInstructorsController);
+//# sourceMappingURL=admin.routes.js.map

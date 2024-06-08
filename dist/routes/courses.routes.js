@@ -15,3 +15,4 @@ courseRoutes.use(auth_middleware_1.requireAuth, admin_middleware_1.adminMiddlewa
 courseRoutes.route("/create").post(multer_middleware_1.multerMiddleware, courses_controller_1.createCourseController);
 courseRoutes.route("/update/:courseId/lectures").patch(courses_controller_1.updateCourse);
 courseRoutes.route("/").get(courses_controller_1.getAllCourses);
+//# sourceMappingURL=courses.routes.js.map

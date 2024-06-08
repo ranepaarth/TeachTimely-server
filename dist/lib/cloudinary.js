@@ -23,3 +23,4 @@ const cloudinaryUploadImage = (fileToUpload) => __awaiter(void 0, void 0, void 0
     }
 });
 exports.cloudinaryUploadImage = cloudinaryUploadImage;
+//# sourceMappingURL=cloudinary.js.map

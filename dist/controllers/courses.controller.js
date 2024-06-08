@@ -98,3 +98,4 @@ const getAllCourses = (0, express_async_handler_1.default)((req, res, next) => _
     res.status(200).json(courses);
 }));
 exports.getAllCourses = getAllCourses;
+//# sourceMappingURL=courses.controller.js.map

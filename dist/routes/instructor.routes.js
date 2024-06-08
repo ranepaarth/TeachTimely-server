@@ -10,3 +10,4 @@ const auth_middleware_1 = require("../middlewares/auth.middleware");
 const instructorRoutes = express_1.default.Router();
 exports.instructorRoutes = instructorRoutes;
 instructorRoutes.route("/me").get(auth_middleware_1.requireAuth, users_controller_1.getLoggedInInstructor);
+//# sourceMappingURL=instructor.routes.js.map

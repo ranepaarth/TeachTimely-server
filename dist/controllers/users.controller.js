@@ -69,3 +69,4 @@ const getLoggedInInstructor = (0, express_async_handler_1.default)((req, res, ne
     res.status(200).json(instructorLectures);
 }));
 exports.getLoggedInInstructor = getLoggedInInstructor;
+//# sourceMappingURL=users.controller.js.map

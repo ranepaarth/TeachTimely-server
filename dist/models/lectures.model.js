@@ -14,3 +14,4 @@ const lectureSchema = new mongoose_1.Schema({
     },
 });
 exports.LectureModel = (0, mongoose_1.model)("Lecture", lectureSchema);
+//# sourceMappingURL=lectures.model.js.map
