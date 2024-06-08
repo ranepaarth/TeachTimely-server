@@ -13,9 +13,10 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.updateCourse = exports.getAllCourses = exports.createCourseController = void 0;
+const cloudinary_1 = require("cloudinary");
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const moment_1 = __importDefault(require("moment"));
-const cloudinary_1 = require("../lib/cloudinary");
+const streamifier_1 = __importDefault(require("streamifier"));
 const courses_model_1 = require("../models/courses.model");
 const lectures_model_1 = require("../models/lectures.model");
 const users_model_1 = require("../models/users.model");
@@ -33,16 +34,36 @@ const createCourseController = (0, express_async_handler_1.default)((req, res, n
         res.status(403);
         throw new Error("Course already exists!");
     }
-    const uploadedImage = yield (0, cloudinary_1.cloudinaryUploadImage)(req.file.path);
-    if (!uploadedImage) {
-        res.status(400);
-        throw new Error("Something went wrong!");
+    let streamUpload = (req) => {
+        return new Promise((resolve, reject) => {
+            let stream = cloudinary_1.v2.uploader.upload_stream((error, result) => {
+                if (result)
+                    resolve(result);
+                else {
+                    console.log(error);
+                    reject(error);
+                }
+            });
+            streamifier_1.default.createReadStream(req.file.buffer).pipe(stream);
+        });
+    };
+    function upload(req) {
+        return __awaiter(this, void 0, void 0, function* () {
+            let result = yield streamUpload(req);
+            return result;
+        });
     }
+    const data = yield upload(req);
+    if (!data) {
+        res.status(400);
+        throw new Error("Something went wrong");
+    }
+    console.log("---------------CLOUDINARY DATA------------------", data);
     const course = yield courses_model_1.CourseModel.create({
         name,
         level,
         description,
-        image: uploadedImage.secure_url,
+        image: data.secure_url,
     });
     course.save();
     res.status(200).json({
@@ -97,8 +118,7 @@ const updateCourse = (0, express_async_handler_1.default)((req, res, next) => __
 exports.updateCourse = updateCourse;
 /* Get courses such that they are referenced to the instructorId */
 const getAllCourses = (0, express_async_handler_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
-    const courses = yield courses_model_1.CourseModel.find({})
-        .sort({ createdAt: -1 });
+    const courses = yield courses_model_1.CourseModel.find({}).sort({ createdAt: -1 });
     if (!courses) {
         res.status(400).json({ message: "No Courses yet!" });
         return;

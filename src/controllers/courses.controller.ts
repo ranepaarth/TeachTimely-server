@@ -1,7 +1,8 @@
+import { v2 as cloudinary, UploadApiResponse } from "cloudinary";
 import { NextFunction, Request, Response } from "express";
 import asyncHandler from "express-async-handler";
 import moment from "moment";
-import { cloudinaryUploadImage } from "../lib/cloudinary";
+import streamifier from "streamifier";
 import { CourseModel } from "../models/courses.model";
 import { LectureModel } from "../models/lectures.model";
 import { UserModel } from "../models/users.model";
@@ -12,7 +13,7 @@ const createCourseController = asyncHandler(
     const { name, level, description } = req.body;
 
     if (!req.file) {
-      res.status(403)
+      res.status(403);
       throw new Error("Please upload an image");
     }
 
@@ -20,21 +21,42 @@ const createCourseController = asyncHandler(
       name,
     });
     if (existingCourse) {
-      res.status(403)
+      res.status(403);
       throw new Error("Course already exists!");
     }
 
-    const uploadedImage = await cloudinaryUploadImage(req.file.path);
-    if (!uploadedImage) {
-      res.status(400)
-      throw new Error("Something went wrong!");
+    let streamUpload = (req: Request) => {
+      return new Promise((resolve, reject) => {
+        let stream = cloudinary.uploader.upload_stream((error, result) => {
+          if (result) resolve(result);
+          else {
+            console.log(error);
+            reject(error);
+          }
+        });
+        streamifier.createReadStream(req.file.buffer).pipe(stream);
+      });
+    };
+
+    async function upload(req: Request) {
+      let result = await streamUpload(req);
+      return result;
     }
+
+    const data = await upload(req) as UploadApiResponse;
+
+    if (!data) {
+      res.status(400);
+      throw new Error("Something went wrong");
+    }
+
+    console.log("---------------CLOUDINARY DATA------------------", data);
 
     const course = await CourseModel.create({
       name,
       level,
       description,
-      image: uploadedImage.secure_url,
+      image: data.secure_url,
     });
     course.save();
 
@@ -55,19 +77,19 @@ const updateCourse = asyncHandler(
 
     const instructor = await UserModel.findById(instructorId);
     if (!instructor) {
-      res.status(404)
+      res.status(404);
       throw new Error("Instructor does not exist!");
     }
 
     if (instructor.role === "ADMIN") {
-      res.status(403)
+      res.status(403);
       throw new Error("Lectures cannot be assigned to an admin");
     }
 
     const course = await CourseModel.findById(courseId);
 
     if (!course) {
-      res.status(404)
+      res.status(404);
       throw new Error("Course not found!!");
     }
 
@@ -78,7 +100,7 @@ const updateCourse = asyncHandler(
     });
 
     if (existingLecture) {
-      res.status(403)
+      res.status(403);
       throw new Error(
         `Instructor already has a lecture on ${moment(date).format(
           "MMMM Do, YYYY"
@@ -102,15 +124,14 @@ const updateCourse = asyncHandler(
       success: true,
       message: "Lecture has been scheduled successfully!",
     });
-    return 
+    return;
   }
 );
 
 /* Get courses such that they are referenced to the instructorId */
 const getAllCourses = asyncHandler(
   async (req: Request, res: Response, next: NextFunction): Promise<void> => {
-    const courses = await CourseModel.find({})
-      .sort({ createdAt: -1 })
+    const courses = await CourseModel.find({}).sort({ createdAt: -1 });
 
     if (!courses) {
       res.status(400).json({ message: "No Courses yet!" });
@@ -118,7 +139,7 @@ const getAllCourses = asyncHandler(
     }
 
     res.status(200).json(courses);
-    return
+    return;
   }
 );
 
