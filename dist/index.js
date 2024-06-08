@@ -32,10 +32,21 @@ cloudinary_1.default.v2.config({
 const app = (0, express_1.default)();
 const PORT = process.env.PORT || 5001;
 const corsOptions = {
-    origin: process.env.ALLOWED_URLS,
+    origin: "https://teach-timely.vercel.app",
     credentials: true,
     methods: ["GET", "POST", "PATCH", "PUT", "DELETE"],
-    allowedHeaders: ["X-CSRF-Token", "X-Requested-With", "Accept", "Accept-Version", "Content-Length", "Content-MD5", "Content-Type", "Date", "X-Api-Version", "Authorization"],
+    allowedHeaders: [
+        "X-CSRF-Token",
+        "X-Requested-With",
+        "Accept",
+        "Accept-Version",
+        "Content-Length",
+        "Content-MD5",
+        "Content-Type",
+        "Date",
+        "X-Api-Version",
+        "Authorization",
+    ],
     exposedHeaders: ["Access-Control-Allow-Private-Network"],
 };
 app.use((0, cors_1.default)(corsOptions));
