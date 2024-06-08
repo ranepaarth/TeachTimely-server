@@ -31,7 +31,7 @@ const express_async_handler_1 = __importDefault(require("express-async-handler")
 const multer_1 = __importStar(require("multer"));
 exports.multerMiddleware = (0, express_async_handler_1.default)((req, res, next) => {
     const upload = (0, multer_1.default)({
-        dest: "uploads/",
+        dest: "uploads/images",
         limits: {
             fileSize: 500000,
         },

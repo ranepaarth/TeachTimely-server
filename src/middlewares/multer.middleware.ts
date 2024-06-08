@@ -5,7 +5,7 @@ import multer, { MulterError } from "multer";
 export const multerMiddleware = expressAsyncHandler(
   (req: Request, res: Response, next: NextFunction) => {
     const upload = multer({
-      dest: "uploads/",
+      dest: "uploads/images",
       limits: {
         fileSize: 500000,
       },
