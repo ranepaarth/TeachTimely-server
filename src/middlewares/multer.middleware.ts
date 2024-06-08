@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import expressAsyncHandler from "express-async-handler";
 import multer, { MulterError } from "multer";
+import path from "path";
 
 export const multerMiddleware = expressAsyncHandler(
   (req: Request, res: Response, next: NextFunction) => {
@@ -24,12 +25,12 @@ export const multerMiddleware = expressAsyncHandler(
 );
 
 const storage = multer.diskStorage({
-  destination:function(req,file,cb){
-    cb(null,'./uploads/images')
+  destination: function (req, file, cb) {
+    cb(null, path.join(__dirname, "/uploads/images/"));
   },
-  filename:function(req,file,cb){
-    cb(null,Date.now()+'_'+file.originalname)
-  }
-})
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + "_" + file.originalname);
+  },
+});
 
-export let upload = multer({storage})
+export let upload = multer({ storage });
