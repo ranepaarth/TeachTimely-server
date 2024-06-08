@@ -68,4 +68,5 @@ app.use(error_middleware_1.notFoundError);
         console.log(`${new Date()} Server is running on PORT: ${PORT}`);
     });
 });
+exports.default = app;
 //# sourceMappingURL=index.js.map
