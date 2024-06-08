@@ -34,8 +34,8 @@ const PORT = process.env.PORT || 5001;
 const corsOptions = {
     origin: process.env.ALLOWED_URLS,
     credentials: true,
-    methods: ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"],
-    allowedHeaders: ["X-CSRF-Token, X-Requested-With, Accept, Accept-Version, Content-Length, Content-MD5, Content-Type, Date, X-Api-Version, Authorization"],
+    methods: ["GET", "POST", "PATCH", "PUT", "DELETE"],
+    allowedHeaders: ["Content-Type", "Authorization"],
     exposedHeaders: ["Access-Control-Allow-Private-Network"],
 };
 app.use((0, cors_1.default)(corsOptions));
