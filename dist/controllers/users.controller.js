@@ -20,9 +20,11 @@ const users_model_1 = require("../models/users.model");
 const getAllInstructorsController = (0, express_async_handler_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const user = req.user;
     if (!user) {
+        res.status(401);
         throw new Error("Unauthorized access denied!!");
     }
     if (user.role === "INSTRUCTORS") {
+        res.status(401);
         throw new Error("Unauthorized access denied!!");
     }
     const instructors = yield users_model_1.UserModel.find({
@@ -34,8 +36,10 @@ const getAllInstructorsController = (0, express_async_handler_1.default)((req, r
     ]);
     if (!instructors) {
         res.status(200).json({ message: "No Instructors are yet registered!!" });
+        return;
     }
     res.status(200).json(instructors);
+    return;
 }));
 exports.getAllInstructorsController = getAllInstructorsController;
 const getLoggedInInstructor = (0, express_async_handler_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
@@ -46,9 +50,11 @@ const getLoggedInInstructor = (0, express_async_handler_1.default)((req, res, ne
         },
     ]);
     if (!loggedInUser) {
+        res.status(404);
         throw new Error("Instructor not found!");
     }
     if (loggedInUser.role === "ADMIN") {
+        res.status(401);
         throw new Error("Unauthorized access to admin denied");
     }
     const courses = yield courses_model_1.CourseModel.find({})
@@ -67,6 +73,7 @@ const getLoggedInInstructor = (0, express_async_handler_1.default)((req, res, ne
         lectures: course.lectures.filter(lecture => lecture.instructor._id.toString() === loggedInUser._id.toString())
     })).filter(courses => courses.lectures.length !== 0);
     res.status(200).json(instructorLectures);
+    return;
 }));
 exports.getLoggedInInstructor = getLoggedInInstructor;
 //# sourceMappingURL=users.controller.js.map

@@ -11,6 +11,7 @@ export const adminMiddleware = expressAsyncHandler(
     const user = await UserModel.findById(requestingUser._id);
 
     if (user?.role !== "ADMIN") {
+      res.status(403)
       throw new Error("Unauthorized access denied!");
     }
 

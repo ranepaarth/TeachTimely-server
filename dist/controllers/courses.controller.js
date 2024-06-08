@@ -23,16 +23,19 @@ const users_model_1 = require("../models/users.model");
 const createCourseController = (0, express_async_handler_1.default)((req, res, next) => __awaiter(void 0, void 0, void 0, function* () {
     const { name, level, description } = req.body;
     if (!req.file) {
+        res.status(403);
         throw new Error("Please upload an image");
     }
     const existingCourse = yield courses_model_1.CourseModel.findOne({
         name,
     });
     if (existingCourse) {
+        res.status(403);
         throw new Error("Course already exists!");
     }
     const uploadedImage = yield (0, cloudinary_1.cloudinaryUploadImage)(req.file.path);
     if (!uploadedImage) {
+        res.status(400);
         throw new Error("Something went wrong!");
     }
     const course = yield courses_model_1.CourseModel.create({
@@ -55,13 +58,16 @@ const updateCourse = (0, express_async_handler_1.default)((req, res, next) => __
     const { date, instructorId } = req.body;
     const instructor = yield users_model_1.UserModel.findById(instructorId);
     if (!instructor) {
+        res.status(404);
         throw new Error("Instructor does not exist!");
     }
     if (instructor.role === "ADMIN") {
+        res.status(403);
         throw new Error("Lectures cannot be assigned to an admin");
     }
     const course = yield courses_model_1.CourseModel.findById(courseId);
     if (!course) {
+        res.status(404);
         throw new Error("Course not found!!");
     }
     const lectureDate = new Date(date);
@@ -70,6 +76,7 @@ const updateCourse = (0, express_async_handler_1.default)((req, res, next) => __
         instructor: instructorId,
     });
     if (existingLecture) {
+        res.status(403);
         throw new Error(`Instructor already has a lecture on ${(0, moment_1.default)(date).format("MMMM Do, YYYY")}`);
     }
     const newLecture = yield lectures_model_1.LectureModel.create({
@@ -85,6 +92,7 @@ const updateCourse = (0, express_async_handler_1.default)((req, res, next) => __
         success: true,
         message: "Lecture has been scheduled successfully!",
     });
+    return;
 }));
 exports.updateCourse = updateCourse;
 /* Get courses such that they are referenced to the instructorId */
@@ -96,6 +104,7 @@ const getAllCourses = (0, express_async_handler_1.default)((req, res, next) => _
         return;
     }
     res.status(200).json(courses);
+    return;
 }));
 exports.getAllCourses = getAllCourses;
 //# sourceMappingURL=courses.controller.js.map

@@ -20,6 +20,7 @@ exports.adminMiddleware = (0, express_async_handler_1.default)((req, res, next) 
     const requestingUser = req.user;
     const user = yield users_model_1.UserModel.findById(requestingUser._id);
     if ((user === null || user === void 0 ? void 0 : user.role) !== "ADMIN") {
+        res.status(403);
         throw new Error("Unauthorized access denied!");
     }
     next();

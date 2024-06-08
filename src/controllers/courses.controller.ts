@@ -12,6 +12,7 @@ const createCourseController = asyncHandler(
     const { name, level, description } = req.body;
 
     if (!req.file) {
+      res.status(403)
       throw new Error("Please upload an image");
     }
 
@@ -19,11 +20,13 @@ const createCourseController = asyncHandler(
       name,
     });
     if (existingCourse) {
+      res.status(403)
       throw new Error("Course already exists!");
     }
 
     const uploadedImage = await cloudinaryUploadImage(req.file.path);
     if (!uploadedImage) {
+      res.status(400)
       throw new Error("Something went wrong!");
     }
 
@@ -52,16 +55,19 @@ const updateCourse = asyncHandler(
 
     const instructor = await UserModel.findById(instructorId);
     if (!instructor) {
+      res.status(404)
       throw new Error("Instructor does not exist!");
     }
 
     if (instructor.role === "ADMIN") {
+      res.status(403)
       throw new Error("Lectures cannot be assigned to an admin");
     }
 
     const course = await CourseModel.findById(courseId);
 
     if (!course) {
+      res.status(404)
       throw new Error("Course not found!!");
     }
 
@@ -72,6 +78,7 @@ const updateCourse = asyncHandler(
     });
 
     if (existingLecture) {
+      res.status(403)
       throw new Error(
         `Instructor already has a lecture on ${moment(date).format(
           "MMMM Do, YYYY"
@@ -95,6 +102,7 @@ const updateCourse = asyncHandler(
       success: true,
       message: "Lecture has been scheduled successfully!",
     });
+    return 
   }
 );
 
@@ -110,6 +118,7 @@ const getAllCourses = asyncHandler(
     }
 
     res.status(200).json(courses);
+    return
   }
 );
 

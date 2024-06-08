@@ -11,9 +11,11 @@ const getAllInstructorsController = asyncHandler(
     const user = (req as CustomRequest).user as User;
 
     if (!user) {
+      res.status(401)
       throw new Error("Unauthorized access denied!!");
     }
     if (user.role === "INSTRUCTORS") {
+      res.status(401)
       throw new Error("Unauthorized access denied!!");
     }
 
@@ -27,9 +29,11 @@ const getAllInstructorsController = asyncHandler(
 
     if (!instructors) {
       res.status(200).json({ message: "No Instructors are yet registered!!" });
+      return
     }
 
     res.status(200).json(instructors);
+    return
   }
 );
 
@@ -44,10 +48,12 @@ const getLoggedInInstructor = asyncHandler(
     ]);
 
     if (!loggedInUser) {
+      res.status(404)
       throw new Error("Instructor not found!");
     }
 
     if (loggedInUser.role === "ADMIN") {
+      res.status(401)
       throw new Error("Unauthorized access to admin denied");
     }
 
@@ -70,6 +76,7 @@ const getLoggedInInstructor = asyncHandler(
     })).filter(courses => courses.lectures.length !== 0);
 
     res.status(200).json(instructorLectures);
+    return
   }
 );
 

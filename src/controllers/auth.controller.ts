@@ -13,6 +13,7 @@ const loginController = asyncHandler(
     });
 
     if (!user) {
+      res.status(404)
       throw new Error("Email does not exist!");
     }
 
@@ -22,6 +23,7 @@ const loginController = asyncHandler(
     );
 
     if (!matchedPassword) {
+      res.status(403)
       throw new Error("Incorrect Password!");
     }
 
@@ -36,6 +38,7 @@ const loginController = asyncHandler(
     });
 
     res.status(200).json({ success: true, user, accessToken });
+    return
   }
 );
 
@@ -51,7 +54,7 @@ const registerController = asyncHandler(
 
       if (existingInstructor) {
         res
-          .status(400)
+          .status(403)
           .json({ success: false, message: "Email already exist!" });
         return;
       }
@@ -74,6 +77,7 @@ const registerController = asyncHandler(
       if (error instanceof Error) {
         console.log(error);
       }
+      res.status(403)
     }
   }
 );
@@ -83,6 +87,7 @@ const logoutController = async (req: Request, res: Response) => {
   res.cookie(process.env.ACCESS_TOKEN_NAME!, "", { expires: new Date(0) });
 
   res.status(200).json({ success: true, message: "Logged out successfully!!" });
+  return
 };
 
 export {

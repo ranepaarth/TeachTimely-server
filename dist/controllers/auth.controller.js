@@ -24,10 +24,12 @@ const loginController = (0, express_async_handler_1.default)((req, res, next) =>
         email,
     });
     if (!user) {
+        res.status(404);
         throw new mongoose_1.Error("Email does not exist!");
     }
     const matchedPassword = yield bcryptjs_1.default.compare(password, user.password);
     if (!matchedPassword) {
+        res.status(403);
         throw new mongoose_1.Error("Incorrect Password!");
     }
     const accessToken = yield user.generateAccessToken();
@@ -39,6 +41,7 @@ const loginController = (0, express_async_handler_1.default)((req, res, next) =>
         maxAge: 3 * 24 * 60 * 60 * 1000,
     });
     res.status(200).json({ success: true, user, accessToken });
+    return;
 }));
 exports.loginController = loginController;
 /* Register */
@@ -50,7 +53,7 @@ const registerController = (0, express_async_handler_1.default)((req, res, next)
         });
         if (existingInstructor) {
             res
-                .status(400)
+                .status(403)
                 .json({ success: false, message: "Email already exist!" });
             return;
         }
@@ -72,6 +75,7 @@ const registerController = (0, express_async_handler_1.default)((req, res, next)
         if (error instanceof mongoose_1.Error) {
             console.log(error);
         }
+        res.status(403);
     }
 }));
 exports.registerController = registerController;
@@ -79,6 +83,7 @@ exports.registerController = registerController;
 const logoutController = (req, res) => __awaiter(void 0, void 0, void 0, function* () {
     res.cookie(process.env.ACCESS_TOKEN_NAME, "", { expires: new Date(0) });
     res.status(200).json({ success: true, message: "Logged out successfully!!" });
+    return;
 });
 exports.logoutController = logoutController;
 //# sourceMappingURL=auth.controller.js.map
