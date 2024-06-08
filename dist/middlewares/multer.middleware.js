@@ -26,7 +26,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.multerMiddleware = void 0;
+exports.upload = exports.multerMiddleware = void 0;
 const express_async_handler_1 = __importDefault(require("express-async-handler"));
 const multer_1 = __importStar(require("multer"));
 exports.multerMiddleware = (0, express_async_handler_1.default)((req, res, next) => {
@@ -46,4 +46,13 @@ exports.multerMiddleware = (0, express_async_handler_1.default)((req, res, next)
         next();
     });
 });
+const storage = multer_1.default.diskStorage({
+    destination: function (req, file, cb) {
+        cb(null, './uploads/images');
+    },
+    filename: function (req, file, cb) {
+        cb(null, Date.now() + '_' + file.originalname);
+    }
+});
+exports.upload = (0, multer_1.default)({ storage });
 //# sourceMappingURL=multer.middleware.js.map
