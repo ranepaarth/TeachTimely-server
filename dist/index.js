@@ -59,7 +59,7 @@ app.use("/api/v1/admin", admin_routes_1.adminRoutes);
 app.use("/api/v1/courses", courses_routes_1.courseRoutes);
 app.use("/api/v1/instructor", instructor_routes_1.instructorRoutes);
 app.get("/", (req, res) => __awaiter(void 0, void 0, void 0, function* () {
-    res.status(200).json({ message: "Server working fine!!" });
+    res.send("Server up and running");
 }));
 app.use(error_middleware_1.errorHandler);
 app.use(error_middleware_1.notFoundError);

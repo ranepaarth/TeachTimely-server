@@ -52,7 +52,7 @@ app.use("/api/v1/courses", courseRoutes);
 app.use("/api/v1/instructor", instructorRoutes);
 
 app.get("/", async (req: Request, res: Response) => {
-  res.status(200).json({ message: "Server working fine!!" });
+  res.send("Server up and running");
 });
 
 app.use(errorHandler);
