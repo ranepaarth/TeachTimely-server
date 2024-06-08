@@ -53,9 +53,11 @@
 
    ACCESS_TOKEN_NAME
 
-    CLOUDINARY_CLOUD_NAME
-    CLOUDINARY_API_KEY
-    CLOUDINARY_API_SECRET
+   # Create or login to your cloudniary account and then navigate to the developer dashboard, there you can get the following values
+   CLOUDINARY_CLOUD_NAME
+   CLOUDINARY_API_KEY
+   CLOUDINARY_API_SECRET
+   
    ```
 
 ## Usage
