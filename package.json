@@ -2,7 +2,7 @@
   "name": "techtimely-server",
   "version": "1.0.0",
   "description": "Backend server for an online lecture scheduling system",
-  "main": "server.ts",
+  "main": "src/index.ts",
   "scripts": {
     "start": "nodemon src/index.ts",
     "build": "rimraf dist && tsc",
